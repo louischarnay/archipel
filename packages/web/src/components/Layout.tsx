@@ -11,11 +11,11 @@ export function EmptyState({ title, text, children }: { title: string; text: str
   );
 }
 
-export function PageHead({ title, lead, children }: { title: string; lead?: string; children?: ReactNode }) {
+export function PageHead({ title, lead, children }: { title?: string; lead?: string; children?: ReactNode }) {
   return (
     <div className="page-head">
       <div>
-        <h1>{title}</h1>
+        {title && <h1>{title}</h1>}
         {lead && <p>{lead}</p>}
       </div>
       {children}

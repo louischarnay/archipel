@@ -25,7 +25,7 @@ function sectionsOf({ groups }: Launchpad, items: LaunchpadItem[], showGroups: b
 export function LaunchpadPage() {
   const { me, navVersion, openAddApp } = useShell();
   const state = useLoad(() => api<Launchpad>('/api/launchpad'), [navVersion]);
-  const { title, welcome, showGroups, openMode } = me.branding;
+  const { welcome, showGroups, openMode } = me.branding;
   const { admin } = me.user;
 
   return (
@@ -34,7 +34,7 @@ export function LaunchpadPage() {
         const items = launchpadItems(launchpad);
         return (
           <div className="page">
-            <PageHead title={title} lead={welcome} />
+            <PageHead lead={welcome} />
             {!items.length && (
               <EmptyState
                 title="No live apps"
