@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tickets</title>
+<style>
+  body { font: 15px/1.5 system-ui, sans-serif; margin: 0; padding: 24px; color: #1a1a1a; background: #fff; }
+  form { display: flex; gap: 8px; margin-bottom: 16px; }
+  input, select, button { font: inherit; padding: 8px 10px; border: 1px solid #ddd; border-radius: 8px; }
+  input { flex: 1; }
+  button { background: #111; color: #fff; border-color: #111; cursor: pointer; }
+  li { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-top: 1px solid #eee; }
+  .done { color: #888; text-decoration: line-through; }
+  ul { list-style: none; padding: 0; }
+</style>
+</head>
+<body>
+<h2>Tickets</h2>
+<form id="add"><input name="title" placeholder="New ticket" required><select name="customer"></select><button>Create</button></form>
+<ul id="list"></ul>
+<script type="module" src="./main.js"></script>
+</body>
+</html>

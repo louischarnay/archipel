@@ -1,0 +1,8 @@
+# Gitleaks default rules, except the fake AWS key the tests plant to check the app scan.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Fake key used by the scan tests"
+regexTarget = "match"
+regexes = ['''AKIAABCDEFGHIJKLMNOP''']

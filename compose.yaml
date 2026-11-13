@@ -1,0 +1,30 @@
+# The Archipel host. Apps run in separate containers, started by the same engine.
+# Setup: copy compose.env.example to .env, then run `docker compose up -d`.
+services:
+  archipel:
+    image: ${ARCHIPEL_IMAGE:-archipel:local}
+    build: .
+    restart: unless-stopped
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    # The socket is worth root access to the engine: this service is the only one to get it.
+    group_add:
+      - ${DOCKER_SOCKET_GID:-0}
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      HOST: 0.0.0.0
+      PORT: 3000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Same path on both sides: the engine mounts the apps' code from this folder.
+      - ${ARCHIPEL_DATA_DIR:?Set ARCHIPEL_DATA_DIR in .env, as an absolute path}:${ARCHIPEL_DATA_DIR}
+    ports:
+      - ${ARCHIPEL_BIND:-127.0.0.1}:${ARCHIPEL_PORT:-3000}:3000

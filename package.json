@@ -1,0 +1,67 @@
+{
+  "name": "archipel",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Self-hosted, agent-first launchpad platform",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/louischarnay/archipel.git"
+  },
+  "homepage": "https://github.com/louischarnay/archipel",
+  "bugs": "https://github.com/louischarnay/archipel/issues",
+  "type": "module",
+  "bin": {
+    "archipel": "packages/cli/dist/cli.js"
+  },
+  "workspaces": [
+    "packages/sdk",
+    "packages/manifest-schema",
+    "packages/server",
+    "packages/web",
+    "packages/cli"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "npm run build -w @archipel/web && ARCHIPEL_AUTH=dev node --conditions=@archipel/source --import=@swc-node/register/esm-register --env-file-if-exists=.env packages/server/src/main.ts",
+    "build": "tsc -b && npm run build -w @archipel/web && chmod +x packages/cli/dist/cli.js && node packages/cli/scripts/bundle.ts",
+    "start": "node --env-file-if-exists=.env packages/server/dist/main.js",
+    "typecheck": "tsc -b && tsc -p packages/web && tsc -p samples/tickets --noEmit && tsc -p tsconfig.test.json && tsc -p test",
+    "lint": "eslint .",
+    "format": "prettier --write \"packages/*/{src,test,scripts}/**/*.{ts,tsx}\" \"{test,scripts}/**/*.ts\"",
+    "format:check": "prettier --check \"packages/*/{src,test,scripts}/**/*.{ts,tsx}\" \"{test,scripts}/**/*.ts\"",
+    "test": "vitest run && npm run test:platform",
+    "test:platform": "NODE_OPTIONS='--conditions=@archipel/source --import=@swc-node/register/esm-register' node --test --test-concurrency=1 \"test/*.test.ts\"",
+    "samples": "tsc -p samples/tickets && node samples/pack.ts",
+    "schema": "node --conditions=@archipel/source --import=@swc-node/register/esm-register packages/manifest-schema/src/export-schema.ts",
+    "token": "node --conditions=@archipel/source --import=@swc-node/register/esm-register --env-file-if-exists=.env packages/server/src/scripts/token.ts",
+    "rotate-secret": "node --conditions=@archipel/source --import=@swc-node/register/esm-register --env-file-if-exists=.env packages/server/src/scripts/rotate.ts",
+    "audit-verify": "node --conditions=@archipel/source --import=@swc-node/register/esm-register --env-file-if-exists=.env packages/server/src/scripts/audit-verify.ts",
+    "version:bump": "node scripts/bump-version.ts",
+    "version:check": "node scripts/check-version.ts",
+    "dev:web": "npm run watch -w @archipel/web"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@swc-node/register": "^1.12.1",
+    "@swc/core": "^1.16.22",
+    "@types/node": "^22.20.5",
+    "@types/pg": "^8.23.1",
+    "@types/yauzl": "^3.4.0",
+    "adm-zip": "^0.6.1",
+    "esbuild": "^0.28.2",
+    "eslint": "^10.14.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.14.0",
+    "jose": "^6.2.14",
+    "prettier": "^3.9.10",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.72.1",
+    "vitest": "^5.0.5"
+  },
+  "overrides": {
+    "minimatch": "^11.0.3"
+  }
+}

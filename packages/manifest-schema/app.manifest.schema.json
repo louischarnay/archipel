@@ -1,0 +1,267 @@
+{
+  "type": "object",
+  "required": [
+    "manifest",
+    "id",
+    "name",
+    "version"
+  ],
+  "properties": {
+    "manifest": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,39}$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+([-+][0-9A-Za-z.-]+)?$"
+    },
+    "icon": {
+      "type": "string"
+    },
+    "group": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,39}$"
+    },
+    "frontend": {
+      "type": "object",
+      "required": [
+        "dir",
+        "route"
+      ],
+      "properties": {
+        "dir": {
+          "type": "string"
+        },
+        "route": {
+          "type": "string",
+          "pattern": "^/[a-z0-9][a-z0-9-]*$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "roles": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*$"
+      },
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1
+        },
+        "uniqueItems": true
+      }
+    },
+    "tables": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^(shared\\.)?[a-z][a-z0-9_]*$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "columns"
+        ],
+        "properties": {
+          "columns": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            },
+            "additionalProperties": {
+              "type": "object",
+              "required": [
+                "type"
+              ],
+              "properties": {
+                "type": {
+                  "enum": [
+                    "uuid",
+                    "string",
+                    "text",
+                    "integer",
+                    "number",
+                    "boolean",
+                    "date",
+                    "datetime",
+                    "json",
+                    "enum",
+                    "ref"
+                  ]
+                },
+                "pk": {
+                  "type": "boolean"
+                },
+                "required": {
+                  "type": "boolean"
+                },
+                "default": {},
+                "values": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 1
+                },
+                "to": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            },
+            "minProperties": 1
+          },
+          "crud": {
+            "type": "boolean"
+          },
+          "rbac": {
+            "type": "object",
+            "properties": {
+              "read": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true
+              },
+              "write": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "controllers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "path",
+          "handler"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "pattern": "^(GET|POST|PUT|PATCH|DELETE) /"
+          },
+          "handler": {
+            "type": "string"
+          },
+          "needs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "properties": {
+        "reads": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^shared\\."
+          }
+        },
+        "writes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^shared\\."
+          }
+        },
+        "network": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(http://)?[a-z0-9.*-]+(:[0-9]+)?$"
+          }
+        },
+        "llm": {
+          "type": "object",
+          "properties": {
+            "quota": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "exposes": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "mcp": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "description",
+              "calls"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]*$"
+              },
+              "description": {
+                "type": "string",
+                "minLength": 1
+              },
+              "calls": {
+                "type": "string",
+                "pattern": "^(GET|POST|PUT|PATCH|DELETE) /"
+              },
+              "input": {
+                "type": "object"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "health": {
+      "type": "string",
+      "pattern": "^/"
+    },
+    "tests": {
+      "type": "string"
+    }
+  },
+  "$id": "https://archipel.dev/schemas/app.manifest.v1.json",
+  "additionalProperties": false
+}

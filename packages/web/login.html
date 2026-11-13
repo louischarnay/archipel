@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en" data-accent="{{accent}}" data-background="{{background}}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign in · {{name}}</title>
+  <link rel="icon" href="/ui/mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/src/styles.css">
+</head>
+<body>
+  <!-- Plain markup filled in by the server: nobody is signed in yet, so there is nothing to load. -->
+  <main class="login">
+    <div class="dev-bar" {{devHidden}}>Development mode</div>
+    <section class="login-card">
+      <img src="/ui/logo" alt="" width="64" height="64">
+      <h1>Welcome to {{name}}</h1>
+      <p class="login-lead">{{lead}}</p>
+      <a class="btn primary large block" href="{{href}}">{{action}}</a>
+      <a class="login-alt" href="{{localHref}}" {{localHidden}}>Continue locally</a>
+    </section>
+    <footer class="login-foot">{{name}} · version {{version}}</footer>
+  </main>
+</body>
+</html>

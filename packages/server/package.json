@@ -1,0 +1,38 @@
+{
+  "name": "@archipel/server",
+  "version": "0.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/louischarnay/archipel.git",
+    "directory": "packages/server"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@archipel/manifest-schema": "*",
+    "@fastify/cookie": "^11.1.5",
+    "@fastify/multipart": "^10.1.6",
+    "@fastify/rate-limit": "^11.2.1",
+    "@fastify/swagger": "^9.9.3",
+    "@nestjs/common": "^12.5.0",
+    "@nestjs/core": "^12.5.0",
+    "@nestjs/platform-fastify": "^12.5.0",
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
+    "better-sqlite3": "^13.0.3",
+    "fastify": "^5.12.8",
+    "knex": "^3.3.0",
+    "openid-client": "^6.8.8",
+    "pg": "^8.23.1",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
+    "tar": "^7.5.22",
+    "typebox": "^1.4.3",
+    "yaml": "^2.9.1",
+    "yauzl": "^3.4.0"
+  }
+}

@@ -1,0 +1,12 @@
+tests:
+  - name: Create a ticket
+    request: POST /data/ticket
+    body: { title: Printer out of order }
+    expect: { status: 201, body: { status: open } }
+    save: { ticket: id }
+  - name: Close the ticket
+    request: POST /tickets/${ticket}/close
+    expect: { status: 200, body: { status: done } }
+  - name: Close an unknown ticket
+    request: POST /tickets/unknown/close
+    expect: { status: 404 }
