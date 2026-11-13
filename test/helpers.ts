@@ -2,6 +2,7 @@ import { randomBytes } from 'node:crypto';
 import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { after } from 'node:test';
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import knex from 'knex';
 import { create } from 'tar';
@@ -26,6 +27,13 @@ export async function freshPostgres(admin: string = TEST_PG ?? '') {
   return url.toString();
 }
 
+// A failed assertion skips the `stop()` written at the end of a test. The open database would then keep
+// the process alive, and the run would hang instead of failing: whatever is still running stops here.
+const running = new Set<() => Promise<void>>();
+after(async () => {
+  for (const stop of [...running]) await stop().catch(() => {});
+});
+
 // `fresh` leaves the instance without a finished setup, as on the very first launch.
 export type TestPlatform = Awaited<ReturnType<typeof startPlatform>>;
 
@@ -41,17 +49,14 @@ export async function startPlatform(
   const config = loadConfig(settings, { allowProcessSandbox: true });
   const platform = await createPlatform(config, { restart });
   const api = createClient(platform.app, config);
-  if (config.auth.mode === 'dev') await api.signIn();
-  return {
-    ...platform,
-    api,
-    config,
-    dir,
-    async stop() {
-      await platform.app.close();
-      rmSync(dir, { recursive: true, force: true });
-    },
+  const stop = async () => {
+    running.delete(stop);
+    await platform.app.close();
+    rmSync(dir, { recursive: true, force: true });
   };
+  running.add(stop);
+  if (config.auth.mode === 'dev') await api.signIn();
+  return { ...platform, api, config, dir, stop };
 }
 
 type Headers = Record<string, string>;
